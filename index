@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<style>
+body {
+  font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
+  white-space: pre-wrap;
+  margin: 5px;
+  padding: 5px;
+  background: #fff;
+  font-size: 14px;
+  line-height: 1.4;
+}
+#eew { 
+  margin: 0; 
+  padding: 0; 
+  font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
+}
+#status { 
+  font-size: 12px; 
+  margin-bottom: 5px; 
+}
+#copyBtn {
+  font-size: 12px;
+  padding: 2px 5px;
+  margin-bottom: 5px;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+<div id="status">更新中...</div>
+<button id="copyBtn">本文をコピー</button>
+<pre id="eew">読み込み中...</pre>
+
+<script>
+const outputEl = document.getElementById("eew");
+const statusEl = document.getElementById("status");
+const copyBtn = document.getElementById("copyBtn");
+
+async function updateEEW() {
+  try {
+    const res = await fetch("https://api.wolfx.jp/jma_eew.json");
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    const data = await res.json();
+
+    let eewMessage = "";
+    let eewNotice = "";
+
+    if (data.isTraining) {
+      outputEl.textContent = "訓練報のため処理終了";
+      return;
+    }
+
+    const maxInt = data.MaxIntensity ?? "不明";
+    const isWarn = data.isWarn;
+    let coloredTitle = data.Title;
+
+    if (["1","2"].includes(maxInt)) {
+      coloredTitle = isWarn ? `🟥${data.Title}🟥` : `🟦${data.Title}🟦`;
+    } else if (["3","4"].includes(maxInt)) {
+      coloredTitle = isWarn ? `🟥${data.Title}🟥` : `🟨${data.Title}🟨`;
+    } else if (["5-","5+","5弱","5強"].includes(maxInt)) {
+      coloredTitle = `🟥${data.Title}🟥`;
+      eewNotice += `＊　＊　＊
+緊急地震速報です。震度${maxInt}の強い揺れがきます。
+ただちに身の安全を確保してください。
+落ちてくるものや倒れやすいものに注意してください。
+安全が確保できたら、テレビやスマートフォン等で最新情報を確認してください。
+揺れがおさまってから火の始末などをしてください。
+震源が海底の場合、津波が発生する場合があります。沿岸部では、念のため津波に注意してください。`;
+    } else if (["6-","6弱","6+","6強","7"].includes(maxInt)) {
+      coloredTitle = `🟪${data.Title}🟪`;
+      eewNotice += `＊　＊　＊
+緊急地震速報です。震度${maxInt}の非常に強い揺れがきます。
+ただちに身の安全を確保してください。頭を守ってください。
+落ちてくるものや倒れやすいものに注意してください。
+安全が確保できたら、テレビやスマートフォン等で最新情報を確認してください。
+揺れがおさまってから火の始末などをしてください。
+＝＝＝
+Emergency Earthquake Warning. Very strong shaking of intensity ${maxInt} is expected. Take immediate action to protect yourself.`;
+    } else {
+      coloredTitle = `《${data.Title}》`;
+      eewNotice += `今後の情報に注意してください。`;
+    }
+
+    // 最上部に更新日時
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const min = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
+
+    eewMessage += coloredTitle;
+
+    const serialText = data.isFinal ? `#第${data.Serial}(最終)報` : `#第${data.Serial}報`;
+    document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
+    eewMessage += `\n${serialText}\n`;
+
+    if (data.isCancel) eewMessage += "\nこの緊急地震速報はキャンセルされました。";
+
+    if (data.isAssumption) {
+      eewMessage += `
+PLUM法による緊急地震速報
+推定最大震度 ${maxInt}`;
+    } else {
+      const hypocenter = data.Hypocenter ?? "震源地不明";
+      const magnitude = data.Magunitude ?? "不明";
+      const depth = data.Depth ?? "不明";
+      eewMessage += `\n${hypocenter} で地震`;
+      eewMessage += `\n推定最大震度 ${maxInt}`;
+      eewMessage += `\nM${magnitude}`;
+      eewMessage += `\n震源の深さ:${depth}km`;
+    }
+
+    if (data.WarnArea && data.WarnArea.length>0) {
+      const chiikiList = data.WarnArea.map(a=>a.Chiiki).join(", ");
+      eewMessage += `\n【対象地域】\n${chiikiList}`;
+    }
+
+    const tz = "Asia/Tokyo";
+    const originStr = data.OriginTime ? new Date(data.OriginTime).toLocaleString("ja-JP",{timeZone:tz}) : "発生時刻不明";
+    const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
+    const announceStr = announceDate
+      ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
+      : "発表時刻不明";
+    eewMessage += `\n\n${originStr}発生`;
+    eewMessage += `\n${announceStr} 気象庁発表`;
+
+    if (eewNotice===""){
+      outputEl.textContent = eewMessage;
+    } else {
+      outputEl.textContent = eewMessage + "\n" + eewNotice;
+    }
+
+  } catch(e) {
+    outputEl.textContent = "取得エラー: " + e.message;
+  }
+}
+
+updateEEW();
+setInterval(updateEEW, 1000);
+
+// コピー機能
+copyBtn.addEventListener("click", () => {
+  const text = outputEl.textContent; // コピー対象
+  navigator.clipboard.writeText(text).then(() => {
+    const originalText = copyBtn.textContent; // 元のボタン文言を保存
+    copyBtn.textContent = "コピー完了"; // 一時的に変更
+    setTimeout(() => { 
+      copyBtn.textContent = originalText; // 1.5秒後に元に戻す
+    }, 1500);
+  }).catch(err => {
+    alert("コピーに失敗しました: " + err);
+  });
+});
+</script>
+</body>
+</html>
