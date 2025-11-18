@@ -31,7 +31,7 @@ body {
 </head>
 <body>
 <div id="status">更新中...</div>
-<button id="copyBtn">本文をコピーv2</button>
+<button id="copyBtn">本文をコピー</button>
 <pre id="eew">読み込み中...</pre>
 
 <script>
@@ -139,8 +139,8 @@ PLUM法による緊急地震速報
       diffMin = diffMs / (1000 * 60);    // 分に換算
     }
     
-    // 3分以上経過したら本文置き換え
-    if (diffMin > 255) {
+    // 5分以上経過したら本文置き換え
+    if (diffMin > 5) {
       eewMessage = "緊急地震速報は発表されていません";
       eewNotice = ""; // 注意文もクリア
     }
