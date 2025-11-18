@@ -128,8 +128,22 @@ PLUM法による緊急地震速報
     const announceStr = announceDate
       ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
       : "発表時刻不明";
+    
     eewMessage += `\n\n${originStr}発生`;
     eewMessage += `\n${announceStr} 気象庁発表`;
+    
+    // --- 差分チェック ---
+    let diffMin = 0;
+    if (announceDate) {
+      const diffMs = now - announceDate; // ミリ秒差
+      diffMin = diffMs / (1000 * 60);    // 分に換算
+    }
+    
+    // 3分以上経過したら本文置き換え
+    if (diffMin > 3) {
+      eewMessage = "緊急地震速報は発表されていません";
+      eewNotice = ""; // 注意文もクリア
+    }
 
     if (eewNotice===""){
       outputEl.textContent = eewMessage;
