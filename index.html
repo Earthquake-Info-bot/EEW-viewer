@@ -73,6 +73,11 @@ async function updateEEW() {
 震源が海底の場合、津波が発生する場合があります。沿岸部では、念のため津波に注意してください。`;
     } else if (["6-","6弱","6+","6強","7"].includes(maxInt)) {
       coloredTitle = `🟪${data.Title}🟪`;
+        let maxIntEn = "";
+          if (maxInt === "6弱") maxIntEn = "6 lower";
+          else if (maxInt === "6強") maxIntEn = "6 upper";
+          else if (maxInt === "7") maxIntEn = "7";
+          else maxIntEn = maxInt; // 6- / 6+ の場合
       eewNotice += `＊　＊　＊
 緊急地震速報です。震度${maxInt}の非常に強い揺れがきます。
 ただちに身の安全を確保してください。頭を守ってください。
@@ -80,7 +85,7 @@ async function updateEEW() {
 安全が確保できたら、テレビやスマートフォン等で最新情報を確認してください。
 揺れがおさまってから火の始末などをしてください。
 ＝＝＝
-Emergency Earthquake Warning. Very strong shaking of intensity ${maxInt} is expected. Take immediate action to protect yourself.`;
+Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is expected. Take immediate action to protect yourself.`;
     } else {
       coloredTitle = `《${data.Title}》`;
       eewNotice += `今後の情報に注意してください。`;
@@ -105,17 +110,20 @@ Emergency Earthquake Warning. Very strong shaking of intensity ${maxInt} is expe
     if (data.isCancel) eewMessage += "\nこの緊急地震速報はキャンセルされました。";
 
     if (data.isAssumption) {
+      const hypocenter = data.Hypocenter ?? "震源地不明";
       eewMessage += `
 PLUM法による緊急地震速報
+${hypocenter} で揺れ
 推定最大震度 ${maxInt}`;
     } else {
       const hypocenter = data.Hypocenter ?? "震源地不明";
       const magnitude = data.Magunitude ?? "不明";
       const depth = data.Depth ?? "不明";
-      eewMessage += `\n${hypocenter} で地震`;
-      eewMessage += `\n推定最大震度 ${maxInt}`;
-      eewMessage += `\nM${magnitude}`;
-      eewMessage += `\n震源の深さ:${depth}km`;
+      eewMessage += `
+${hypocenter} で地震
+推定最大震度 ${maxInt}
+M${magnitude}
+震源の深さ:${depth}km`;
     }
 
     if (data.WarnArea && data.WarnArea.length>0) {
