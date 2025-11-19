@@ -149,9 +149,11 @@ M${magnitude}
     }
     
     // 5分以上経過したら本文置き換え
+    if (data.isFinal) {
     if (diffMin > 5) {
       eewMessage = "緊急地震速報は発表されていません";
       eewNotice = ""; // 注意文もクリア
+    }
     }
 
     if (eewNotice===""){
