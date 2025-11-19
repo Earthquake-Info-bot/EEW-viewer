@@ -51,7 +51,7 @@ async function updateEEW() {
       "5-":"🟥", "5+":"🟥", "5弱":"🟥", "5強":"🟥",
       "6-":"🟪", "6+":"🟪", "6弱":"🟪", "6強":"🟪", "7":"🟪"
     };
-    const symbol = intensityMap[maxInt] || "《》";
+    const symbol = intensityMap[maxInt] || "●";
     let coloredTitle = symbol + data.Title + symbol;
 
     // 注意文
