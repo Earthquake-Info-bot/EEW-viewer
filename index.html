@@ -117,8 +117,7 @@ ${hypocenter} で揺れ
 推定最大震度 ${maxInt}`;
     } else {
       const hypocenter = data.Hypocenter ?? "震源地不明";
-      const magnitude = data.Magunitude ?? "不明";
-      const depth = data.Depth ?? "不明";
+      const magnitude = (data.Magunitude != null) ? Number(data.Magunitude).toFixed(1) : "不明";      const depth = data.Depth ?? "不明";
       eewMessage += `
 ${hypocenter} で地震
 推定最大震度 ${maxInt}
@@ -132,7 +131,18 @@ M${magnitude}
     }
 
     const tz = "Asia/Tokyo";
-    const originStr = data.OriginTime ? new Date(data.OriginTime).toLocaleString("ja-JP",{timeZone:tz}) : "発生時刻不明";
+    const originStr = data.OriginTime
+      ? (() => {
+          const d = new Date(data.OriginTime);
+          const yyyy = d.getFullYear();
+          const MM = String(d.getMonth() + 1).padStart(2, '0');
+          const dd = String(d.getDate()).padStart(2, '0');
+          const HH = String(d.getHours()).padStart(2, '0');
+          const mm = String(d.getMinutes()).padStart(2, '0');
+          const ss = String(d.getSeconds()).padStart(2, '0');
+          return `${yyyy}/${MM}/${dd} ${HH}:${mm}:${ss}`;
+        })()
+      : "発生時刻不明";
     const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
     const announceStr = announceDate
       ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
