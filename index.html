@@ -109,7 +109,18 @@ Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is ex
     document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
     eewMessage += `\n${serialText}\n`;
 
-    if (data.isCancel) eewMessage += "\nこの緊急地震速報はキャンセルされました。";
+    if (data.isCancel) {
+      const hypocenter = data.Hypocenter ?? "震源地不明";
+        const tz = "Asia/Tokyo";
+        const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
+        const announceStr = announceDate
+          ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
+          : "発表時刻不明";
+
+      eewMessage += `\nこの緊急地震速報${hypocenter ? `（${hypocenter}）` : ""}はキャンセルされました。\n\n${announceStr}　気象庁発表`;
+      eewNotice = ""
+      return;
+    }
 
     if (data.isAssumption) {
       const hypocenter = data.Hypocenter ?? "震源地不明";
