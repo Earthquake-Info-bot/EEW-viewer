@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーvT1.4.1</title>
+<title>緊急地震速報ビューアーvT1.6.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -119,6 +119,18 @@ Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is ex
 
       eewMessage += `\nこの緊急地震速報${hypocenter ? `（${hypocenter}）` : ""}はキャンセルされました。\n\n${announceStr}　気象庁発表`;
       eewNotice = ""
+
+      outputEl.textContent = eewMessage + (eewNotice ? "\n" + eewNotice : "");
+    // 最上部に更新日時
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const min = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
+
       return;
     }
 
