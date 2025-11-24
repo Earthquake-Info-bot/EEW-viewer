@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアー</title>
+<title>緊急地震速報ビューアーv1.4.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -51,6 +51,17 @@ async function updateEEW() {
 
     if (data.isTraining) {
       outputEl.textContent = "訓練報のため処理終了";
+      
+    // 最上部に更新日時
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const min = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
+      
       return;
     }
 
@@ -90,16 +101,6 @@ Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is ex
       coloredTitle = `《${data.Title}》`;
       eewNotice += `今後の情報に注意してください。`;
     }
-
-    // 最上部に更新日時
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    const h = String(now.getHours()).padStart(2,'0');
-    const min = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
 
     eewMessage += coloredTitle;
 
@@ -157,6 +158,16 @@ M${magnitude}
       outputEl.textContent = eewMessage + "\n" + eewNotice;
     }
 
+    // 最上部に更新日時
+    const now = new Date();
+    const y = now.getFullYear();
+    const m = String(now.getMonth()+1).padStart(2,'0');
+    const d = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const min = String(now.getMinutes()).padStart(2,'0');
+    const s = String(now.getSeconds()).padStart(2,'0');
+    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
+    
   } catch(e) {
     outputEl.textContent = "取得エラー: " + e.message + (e.stack ? "\n" + e.stack : "");
   }
