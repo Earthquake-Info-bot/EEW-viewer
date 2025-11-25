@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーvT1.9.3</title>
+<title>緊急地震速報ビューアーvT1.9.4</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -66,7 +66,7 @@ async function updateEEW() {
       return;
     }
 
-    const maxInt = data.MaxIntensity ?? "不明";
+    let maxInt = data.MaxIntensity;
     const isWarn = data.isWarn;
     let coloredTitle = data.Title;
 
@@ -95,7 +95,9 @@ async function updateEEW() {
 Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is expected. Take immediate action to protect yourself.`;
     } else {
       coloredTitle = `《${data.Title}》`;
-      eewNotice += `今後の情報に注意してください。`;
+      maxInt = "不明"
+      eewNotice += `＊　＊　＊
+今後の情報に注意してください。`;
     }
 
     eewMessage += coloredTitle;
