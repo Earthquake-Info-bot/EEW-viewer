@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv1.8.2</title>
+<title>緊急地震速報ビューアーv1.8.3</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -52,6 +52,10 @@ body {
 <pre id="eew">読み込み中...</pre>
 
 <script>
+    let eewMessage = "";
+    let eewNotice = "";
+
+  
 const outputEl = document.getElementById("eew");
 const statusEl = document.getElementById("status");
 const copyBtn = document.getElementById("copyBtn");
@@ -63,10 +67,7 @@ async function updateEEW() {
     //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-
-    let eewMessage = "";
-    let eewNotice = "";
-
+    
     if (data.isTraining) {
       outputEl.textContent = "訓練報のため処理終了";
       
