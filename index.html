@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv1.9.1</title>
+<title>緊急地震速報ビューアーvT1.9.3</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -42,8 +42,8 @@ const copyBtn = document.getElementById("copyBtn");
 
 async function updateEEW() {
   try {
-    const res = await fetch("https://api.wolfx.jp/jma_eew.json");
-    //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
+    //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
@@ -78,11 +78,7 @@ async function updateEEW() {
       coloredTitle = `🟥${data.Title}🟥`;
       eewNotice += `＊　＊　＊
 緊急地震速報です。震度${maxInt}の強い揺れがきます。
-ただちに身の安全を確保してください。
-落ちてくるものや倒れやすいものに注意してください。
-安全が確保できたら、テレビやスマートフォン等で最新情報を確認してください。
-揺れがおさまってから火の始末などをしてください。
-震源が海底の場合、津波が発生する場合があります。沿岸部では、念のため津波に注意してください。`;
+頭を守るなどして、ただちに身の安全を確保してください。`;
     } else if (["6-","6弱","6+","6強","7"].includes(maxInt)) {
       coloredTitle = `🟪${data.Title}🟪`;
         let maxIntEn = "";
@@ -93,9 +89,8 @@ async function updateEEW() {
       eewNotice += `＊　＊　＊
 緊急地震速報です。震度${maxInt}の非常に強い揺れがきます。
 ただちに身の安全を確保してください。頭を守ってください。
-落ちてくるものや倒れやすいものに注意してください。
-安全が確保できたら、テレビやスマートフォン等で最新情報を確認してください。
-揺れがおさまってから火の始末などをしてください。
+震源が海底の場合は津波が発生する可能性があります。
+沿岸部では、念のため津波に注意してください。
 ＝＝＝
 Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is expected. Take immediate action to protect yourself.`;
     } else {
