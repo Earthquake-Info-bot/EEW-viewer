@@ -36,15 +36,18 @@ body {
   cursor: pointer;
   display: inline-block;   /* ← 追加 */
 }
-button {
-  white-space: normal;   /* ← これを追加 */
+#copyBtns {
+  display: flex;       /* 横並びにする */
+  gap: 5px;            /* ボタン間の隙間 */
 }
 </style>
 </head>
 <body>
 <div id="status">更新中...</div>
-<button id="copyBtn">本文をコピー</button>
-<button id="copyBtn2">注意文をコピー</button>
+<div id="copyBtns">
+  <button id="copyBtn">本文をコピー</button>
+  <button id="copyBtn2">注意文をコピー</button>
+</div>
 <pre id="eew">読み込み中...</pre>
 
 <script>
