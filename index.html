@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーvT1.8.4</title>
+<title>緊急地震速報ビューアーv1.9.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -11,13 +11,12 @@ body {
   padding: 5px;
   background: #fff;
   font-size: 14px;
-  line-height: 0.5;
+  line-height: 1.4;
 }
 #eew { 
   margin: 0; 
   padding: 0; 
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
-  line-height: 1.4;
 }
 #status { 
   font-size: 12px; 
@@ -28,49 +27,29 @@ body {
   padding: 2px 5px;
   margin-bottom: 0px;
   cursor: pointer;
-  display: inline-block;   /* ← 追加 */
-}
-#copyBtn2 {
-  font-size: 12px;
-  padding: 2px 5px;
-  margin-bottom: 0px;
-  cursor: pointer;
-  display: inline-block;   /* ← 追加 */
-}
-#copyBtns {
-  display: flex;       /* 横並びにする */
-  gap: 5px;            /* ボタン間の隙間 */
 }
 </style>
 </head>
 <body>
 <div id="status">更新中...</div>
-<div id="copyBtns">
-  <button id="copyBtn">本文をコピー</button>
-  <button id="copyBtn2">注意文をコピー</button>
-</div>
+<button id="copyBtn">本文をコピー</button>
 <pre id="eew">読み込み中...</pre>
 
 <script>
-    let eewMessage = "";
-    let eewNotice = "";
-
-  
 const outputEl = document.getElementById("eew");
 const statusEl = document.getElementById("status");
 const copyBtn = document.getElementById("copyBtn");
-const copyBtn2 = document.getElementById("copyBtn2");
 
 async function updateEEW() {
-    eewMessage = "";
-    eewNotice = "";
-  
   try {
     //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
     const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
-    
+
+    let eewMessage = "";
+    let eewNotice = "";
+
     if (data.isTraining) {
       outputEl.textContent = "訓練報のため処理終了";
       
@@ -223,26 +202,12 @@ setInterval(updateEEW, 2000);
 
 // コピー機能
 copyBtn.addEventListener("click", () => {
-  const text = eewMessage; // コピー対象
+  const text = outputEl.textContent; // コピー対象
   navigator.clipboard.writeText(text).then(() => {
     const originalText = copyBtn.textContent; // 元のボタン文言を保存
     copyBtn.textContent = "コピー完了"; // 一時的に変更
     setTimeout(() => { 
       copyBtn.textContent = originalText; // 1.5秒後に元に戻す
-    }, 1500);
-  }).catch(err => {
-    alert("コピーに失敗しました: " + err);
-  });
-});
-  
-copyBtn2.addEventListener("click", () => {
-  const text = eewNotice; // 注意文だけコピー
-
-  navigator.clipboard.writeText(text).then(() => {
-    const originalText = copyBtn2.textContent;
-    copyBtn2.textContent = "コピー完了";
-    setTimeout(() => { 
-      copyBtn2.textContent = originalText;
     }, 1500);
   }).catch(err => {
     alert("コピーに失敗しました: " + err);
