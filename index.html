@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv1.9.4</title>
+<title>緊急地震速報ビューアーv1.9.5</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -102,7 +102,7 @@ Emergency Earthquake Warning. Very strong shaking of intensity ${maxIntEn} is ex
 
     eewMessage += coloredTitle;
 
-    const serialText = data.isFinal ? `#第${data.Serial}(最終)報` : `#第${data.Serial}報`;
+    const serialText = data.isFinal ? `# 第${data.Serial}(最終)報` : `# 第${data.Serial}報`;
     document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
     eewMessage += `\n${serialText}\n`;
 
