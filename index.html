@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーvT1.9.9</title>
+<title>緊急地震速報ビューアーvT1.9.10</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -220,8 +220,8 @@ M${magnitude}
         }
       }
     
-      eewMessage += `\n【対象地域（地方）】\n${[...regionSet].join("、")}`;
-      eewMessage += `\n\n【対象地域（詳細）】\n${detailList.join(", ")}`;
+      eewMessage += `\n\n【対象地域（地方）】\n${[...regionSet].join("、")}`;
+      eewMessage += `\n\n【対象地域（詳細）】\n${detailList.join("、")}`;
     }
 
     const tz = "Asia/Tokyo";
