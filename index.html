@@ -95,14 +95,13 @@ const regionMap = {
   "宮古島": ["宮古島"],
   "八重山": ["石垣島", "与那国島", "西表島"]
 };
-  
+
 const outputEl = document.getElementById("eew");
 const statusEl = document.getElementById("status");
 const copyBtn = document.getElementById("copyBtn");
 
 async function updateEEW() {
   try {
-    //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
     const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
@@ -112,17 +111,14 @@ async function updateEEW() {
 
     if (data.isTraining) {
       outputEl.textContent = "訓練報のため処理終了";
-      
-    // 最上部に更新日時
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    const h = String(now.getHours()).padStart(2,'0');
-    const min = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
-      
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth()+1).padStart(2,'0');
+      const d = String(now.getDate()).padStart(2,'0');
+      const h = String(now.getHours()).padStart(2,'0');
+      const min = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
       return;
     }
 
@@ -142,10 +138,10 @@ async function updateEEW() {
 倒れやすいものなどからは離れてください。`;
     } else if (["6-","6弱","6+","6強","7"].includes(maxInt)) {
       coloredTitle = `🟪${data.Title}🟪`;
-        let maxIntEn = "";
-          if (maxInt === "6弱") maxIntEn = "6 lower";
-          else if (maxInt === "6強") maxIntEn = "6 upper";
-          else maxIntEn = maxInt; // 6- / 6+ の場合
+      let maxIntEn = "";
+      if (maxInt === "6弱") maxIntEn = "6 lower";
+      else if (maxInt === "6強") maxIntEn = "6 upper";
+      else maxIntEn = maxInt;
       eewNotice += `＊　＊　＊
 緊急地震速報です。震度${maxInt}の非常に強い揺れに警戒してください。
 ただちに身の安全を確保してください。頭を守ってください。
@@ -169,26 +165,24 @@ Earthquake Early Warning. Very strong shaking of intensity ${maxIntEn} is expect
 
     if (data.isCancel) {
       const hypocenter = data.Hypocenter ?? "震源地不明";
-        const tz = "Asia/Tokyo";
-        const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
-        const announceStr = announceDate
-          ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
-          : "発表時刻不明";
+      const tz = "Asia/Tokyo";
+      const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
+      const announceStr = announceDate
+        ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
+        : "発表時刻不明";
 
       eewMessage += `\nこの緊急地震速報${hypocenter ? `（${hypocenter}）` : ""}はキャンセルされました。\n\n${announceStr}　気象庁発表`;
       eewNotice = ""
 
       outputEl.textContent = eewMessage + (eewNotice ? "\n" + eewNotice : "");
-    // 最上部に更新日時
-    const now = new Date();
-    const y = now.getFullYear();
-    const m = String(now.getMonth()+1).padStart(2,'0');
-    const d = String(now.getDate()).padStart(2,'0');
-    const h = String(now.getHours()).padStart(2,'0');
-    const min = String(now.getMinutes()).padStart(2,'0');
-    const s = String(now.getSeconds()).padStart(2,'0');
-    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
-
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth()+1).padStart(2,'0');
+      const d = String(now.getDate()).padStart(2,'0');
+      const h = String(now.getHours()).padStart(2,'0');
+      const min = String(now.getMinutes()).padStart(2,'0');
+      const s = String(now.getSeconds()).padStart(2,'0');
+      statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
       return;
     }
 
@@ -200,7 +194,8 @@ ${hypocenter} で揺れ
 推定最大震度 ${maxInt}`;
     } else {
       const hypocenter = data.Hypocenter ?? "震源地不明";
-      const magnitude = (data.Magunitude != null) ? Number(data.Magunitude).toFixed(1) : "不明";      const depth = data.Depth ?? "不明";
+      const magnitude = (data.Magunitude != null) ? Number(data.Magunitude).toFixed(1) : "不明";
+      const depth = data.Depth ?? "不明";
       eewMessage += `
 ${hypocenter} で地震
 推定最大震度 ${maxInt}
@@ -211,7 +206,6 @@ M${magnitude}
     if (data.WarnArea && data.WarnArea.length > 0) {
       const detailList = data.WarnArea.map(a => a.Chiiki);
       const regionSet = new Set();
-    
       for (const detail of detailList) {
         for (const [region, areas] of Object.entries(regionMap)) {
           if (areas.some(area => detail.includes(area))) {
@@ -219,8 +213,22 @@ M${magnitude}
           }
         }
       }
-    
-      eewMessage += `\n\n【対象地域（地方）】\n${[...regionSet].join("、")}`;
+
+      // 地方順を指定
+      const regionOrder = [
+        "道北", "道央", "道南", "道東",
+        "青森", "岩手", "宮城", "秋田", "山形", "福島",
+        "茨城", "栃木", "群馬", "埼玉", "千葉", "東京", "伊豆諸島", "小笠原", "神奈川",
+        "新潟", "富山", "石川", "福井", "山梨", "長野",
+        "岐阜", "静岡", "愛知", "三重",
+        "滋賀", "京都", "大阪", "兵庫", "奈良", "和歌山",
+        "鳥取", "島根", "岡山", "広島", "山口",
+        "徳島", "香川", "愛媛", "高知",
+        "福岡", "佐賀", "長崎", "熊本", "大分", "宮崎", "鹿児島",
+        "奄美群島", "沖縄本島", "大東島", "宮古島", "八重山"
+      ];
+      const sortedRegions = regionOrder.filter(r => regionSet.has(r));
+      eewMessage += `\n\n【対象地域（地方）】\n${sortedRegions.join("、")}`;
       eewMessage += `\n\n【対象地域（詳細）】\n${detailList.join("、")}`;
     }
 
@@ -244,14 +252,13 @@ M${magnitude}
     
     eewMessage += `\n\n${originStr}発生`;
     eewMessage += `\n${announceStr} 気象庁発表`;
-    
+
     if (eewNotice===""){
       outputEl.textContent = eewMessage;
     } else {
       outputEl.textContent = eewMessage + "\n" + eewNotice;
     }
 
-    // 最上部に更新日時
     const now = new Date();
     const y = now.getFullYear();
     const m = String(now.getMonth()+1).padStart(2,'0');
@@ -271,12 +278,12 @@ setInterval(updateEEW, 2000);
 
 // コピー機能
 copyBtn.addEventListener("click", () => {
-  const text = outputEl.textContent; // コピー対象
+  const text = outputEl.textContent;
   navigator.clipboard.writeText(text).then(() => {
-    const originalText = copyBtn.textContent; // 元のボタン文言を保存
-    copyBtn.textContent = "コピー完了"; // 一時的に変更
+    const originalText = copyBtn.textContent;
+    copyBtn.textContent = "コピー完了";
     setTimeout(() => { 
-      copyBtn.textContent = originalText; // 1.5秒後に元に戻す
+      copyBtn.textContent = originalText;
     }, 1500);
   }).catch(err => {
     alert("コピーに失敗しました: " + err);
