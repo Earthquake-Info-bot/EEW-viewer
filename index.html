@@ -206,23 +206,24 @@ M${magnitude}
 
       if (data.WarnArea && data.WarnArea.length > 0) {
       
-        // ▼ 詳細地域 + 予想震度
+        // ▼ 対象地域（詳細）：元データ順 + 予想震度
         const detailList = data.WarnArea.map(a => {
           const shindo = a.Shindo1 ?? "不明";
-          return `${a.Chiiki}[震度${shindo}]`;
+          return `${a.Chiiki} [震度${shindo}]`;
         });
       
+        // ▼ 対象地域（地方）抽出
         const regionSet = new Set();
-        for (const a of data.WarnArea) {
-          const detail = a.Chiiki;
+      
+        for (const { Chiiki } of data.WarnArea) {
           for (const [region, areas] of Object.entries(regionMap)) {
-            if (areas.some(area => detail.includes(area))) {
+            if (areas.some(area => Chiiki.includes(area))) {
               regionSet.add(region);
             }
           }
         }
       
-        // 地方順
+        // ▼ 地方の表示順（固定）
         const regionOrder = [
           "道北","道央","道南","道東",
           "青森","岩手","宮城","秋田","山形","福島",
@@ -238,6 +239,7 @@ M${magnitude}
       
         const sortedRegions = regionOrder.filter(r => regionSet.has(r));
       
+        // ▼ 出力
         eewMessage += `\n\n【対象地域(地方)】\n${sortedRegions.join("、")}`;
         eewMessage += `\n\n【対象地域(詳細)】\n${detailList.join("\n")}`;
       }
