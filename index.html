@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーvT1.9.12</title>
+<title>緊急地震速報ビューアーvT1.9.13</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -209,7 +209,7 @@ M${magnitude}
         // ▼ 対象地域（詳細）：元データ順 + 予想震度
         const detailList = data.WarnArea.map(a => {
           const shindo = a.Shindo1 ?? "不明";
-          return `${a.Chiiki} [震度${shindo}]`;
+          return `${a.Chiiki} [${shindo}]`;
         });
       
         // ▼ 対象地域（地方）抽出
@@ -241,7 +241,7 @@ M${magnitude}
       
         // ▼ 出力
         eewMessage += `\n\n【対象地域(地方)】\n${sortedRegions.join("、")}`;
-        eewMessage += `\n\n【対象地域(詳細)】\n${detailList.join("\n")}`;
+        eewMessage += `\n\n【対象地域(詳細)[予想震度]】\n${detailList.join("\n")}`;
       }
 
     const tz = "Asia/Tokyo";
