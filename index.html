@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv3.1.2</title>
+<title>緊急地震速報ビューアーv3.2.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -195,6 +195,16 @@ const AREA_ORDER = [
   "沖縄県本島北部","沖縄県本島中南部","沖縄県久米島","沖縄県大東島",
   "沖縄県宮古島","沖縄県石垣島","沖縄県与那国島","沖縄県西表島"
 ];
+// 地域順ソート用（AREA_ORDER準拠）
+const areaOrderIndex = new Map(
+  AREA_ORDER.map((name, idx) => [name, idx])
+);
+
+function sortByAreaOrder(a, b) {
+  const ia = areaOrderIndex.has(a) ? areaOrderIndex.get(a) : Infinity;
+  const ib = areaOrderIndex.has(b) ? areaOrderIndex.get(b) : Infinity;
+  return ia - ib;
+}
 
 async function updateEEW() {
   try {
@@ -379,6 +389,18 @@ M${magnitude}
             default: int0.push(area.Chiiki);
           }
         }
+
+        // ▼ ここで地域順ソート
+        int7 .sort(sortByAreaOrder);
+        int6p.sort(sortByAreaOrder);
+        int6m.sort(sortByAreaOrder);
+        int5p.sort(sortByAreaOrder);
+        int5m.sort(sortByAreaOrder);
+        int4 .sort(sortByAreaOrder);
+        int3 .sort(sortByAreaOrder);
+        int2 .sort(sortByAreaOrder);
+        int1 .sort(sortByAreaOrder);
+        int0 .sort(sortByAreaOrder);
 
         let esi = "";
         if (int7.length || int6p.length || int6m.length) esi += "⚠️以下の地域は激しい揺れ警戒\n";
