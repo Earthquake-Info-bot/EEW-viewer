@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv3.2.1</title>
+<title>緊急地震速報ビューアーv3.2.2</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -470,13 +470,8 @@ M${magnitude}
           return `${yyyy}/${MM}/${dd} ${HH}:${mm}:${ss}`;
         })()
       : "----/--/-- --:--:--";
-    const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
-    const announceStr = announceDate
-      ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
-      : "--日 --:--";
     
     eewMessage += `\n${originStr} 地震発生`;
-    eewMessage += `\n${announceStr} 気象庁発表`;
     eewMessage += `\n出典:WolfxAPI`;
 
     outputEl.textContent = eewMessage;
@@ -488,7 +483,18 @@ M${magnitude}
     const h = String(now.getHours()).padStart(2,'0');
     const min = String(now.getMinutes()).padStart(2,'0');
     const s = String(now.getSeconds()).padStart(2,'0');
-    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
+
+    const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
+    const announceStr = announceDate
+      ? `${announceDate.getFullYear()}/` +
+        `${String(announceDate.getMonth()+1).padStart(2,'0')}/` +
+        `${String(announceDate.getDate()).padStart(2,'0')} ` +
+        `${String(announceDate.getHours()).padStart(2,'0')}:` +
+        `${String(announceDate.getMinutes()).padStart(2,'0')}:` +
+        `${String(announceDate.getSeconds()).padStart(2,'0')}`
+      : "----/--/-- --:--:--";
+    
+    statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}\n発表時刻: ${announceStr}`;
     
   } catch(e) {
     outputEl.textContent = "取得エラー: " + e.message + (e.stack ? "\n" + e.stack : "");
