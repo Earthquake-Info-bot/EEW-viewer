@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv3.2.4</title>
+<title>緊急地震速報ビューアーv3.2.5</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -333,7 +333,7 @@ async function updateEEW() {
         ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
         : "発表時刻不明";
 
-      eewMessage += `\nこの緊急地震速報${hypocenter ? `（震源地：${hypocenter}）` : ""}はキャンセルされました。`;
+      eewMessage += `\n＜キャンセル報＞この緊急地震速報${hypocenter ? `（推定震源地：${hypocenter}）` : ""}は取り消されました。`;
 
       outputEl.textContent = eewMessage;
       const now = new Date();
