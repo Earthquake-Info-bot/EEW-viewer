@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>t緊急地震速報ビューアーv3.4.1</title>
+<title>t緊急地震速報ビューアーv3.4.2</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -472,8 +472,10 @@ M${magnitude}
           return `${yyyy}/${MM}/${dd} ${HH}:${mm}:${ss}`;
         })()
       : "----/--/-- --:--:--";
-    
-    eewMessage += `\n${originStr} 頃発生`;
+
+    let orgUnit = "頃発生";
+    if (data.isAssumption) orgUnit = "検知";
+    eewMessage += `\n${originStr} ${orgUnit}`;
     eewMessage += `\n出典:WolfxAPI`;
 
     outputEl.textContent = eewMessage;
