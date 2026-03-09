@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv3.3.3</title>
+<title>t緊急地震速報ビューアーv3.4.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -207,8 +207,8 @@ function sortByAreaOrder(a, b) {
 
 async function updateEEW() {
   try {
-    const res = await fetch("https://api.wolfx.jp/jma_eew.json");
-    //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
+    //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
@@ -236,9 +236,9 @@ async function updateEEW() {
     } else if (["3","4"].includes(maxInt)) {
       coloredTitle = isWarn ? `🟥${data.Title}🟥` : `🟨${data.Title}🟨`;
     } else if (["5-","5+","5弱","5強"].includes(maxInt)) {
-      coloredTitle = `🟥${data.Title}🟥`;
+      coloredTitle = isWarn ? `🟥${data.Title}🟥` : `🟧${data.Title}🟧`;
     } else if (["6-","6弱","6+","6強","7"].includes(maxInt)) {
-      coloredTitle = `🟪${data.Title}🟪`;
+      coloredTitle = isWarn ? `🟪${data.Title}🟪` : `🟧${data.Title}🟧`;
     } else {
       coloredTitle = `《${data.Title}》`;
       maxInt = "不明"
@@ -322,7 +322,10 @@ async function updateEEW() {
     const serialText = data.isFinal ? `# 第${data.Serial}(最終)報` : `# 第${data.Serial}報`;
     document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
     let plum = "";
-    if (data.isAssumption) plum = "  /  PLUM法";
+    if (data.isAssumption) {
+        if (!data.isWarn&&maxInt==="5弱") plum = "  /  レベル法";
+        else plum = "  /  PLUM法";
+    }
     eewMessage += `\n${serialText}${plum}\n`;
 
     if (data.isCancel) {
