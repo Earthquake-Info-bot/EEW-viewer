@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>緊急地震速報ビューアーv3.4.2</title>
+<title>t緊急地震速報ビューアーv3.5.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -207,8 +207,8 @@ function sortByAreaOrder(a, b) {
 
 async function updateEEW() {
   try {
-    const res = await fetch("https://api.wolfx.jp/jma_eew.json");
-    //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
+    //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
@@ -241,7 +241,8 @@ async function updateEEW() {
       coloredTitle = isWarn ? `🟪${data.Title}🟪` : `🟧${data.Title}🟧`;
     } else {
       coloredTitle = `《${data.Title}》`;
-      maxInt = "不明"
+      maxInt = "不明";
+      if (data.Depth > 150) maxInt = "推定なし（深発）";
     }
     if (data.isCancel) coloredTitle = "《緊急地震速報（取消）》";
     eewMessage += coloredTitle;
@@ -350,11 +351,14 @@ async function updateEEW() {
       return;
     }
 
+    if (maxInt !== "不明" && maxInt !== "推定なし（深発）") {
+        maxInt = `震度${maxInt}`;
+    }
     if (data.isAssumption) {
       const hypocenter = data.Hypocenter ?? "震源地不明";
       eewMessage += `
 ${hypocenter} で揺れ
-推定最大震度【震度${maxInt}】
+推定最大震度【${maxInt}】
 `;
     } else {
       const hypocenter = data.Hypocenter ?? "震源地不明";
@@ -362,7 +366,7 @@ ${hypocenter} で揺れ
       const depth = data.Depth ?? "不明";
       eewMessage += `
 ${hypocenter} で地震
-推定最大震度【震度${maxInt}】
+推定最大震度【${maxInt}】
 M${magnitude}
 震源の深さ:${depth}km
 `;
