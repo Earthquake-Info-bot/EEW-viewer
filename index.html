@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.8.3</title>
+<title>緊急地震速報ビューアーv3.8.4</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -520,10 +520,10 @@ setInterval(updateEEW, 1000);
 copyBtn.addEventListener("click", () => {
   const text = outputEl.textContent;
   navigator.clipboard.writeText(text).then(() => {
-    const originalText = " \n　　本文をコピー　　\n ";
-    copyBtn.textContent = " \n　　コピー完了　　\n ";
+    const originalText = "&nbsp;<br>　　本文をコピー　　<br>&nbsp;";
+    copyBtn.innerHTML = "&nbsp;<br>　　コピー完了　　<br>&nbsp;";
     setTimeout(() => { 
-      copyBtn.textContent = originalText;
+      copyBtn.innerHTML = originalText;
     }, 1000);
   }).catch(err => {
     alert("コピーに失敗しました: " + err);
