@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.8.4</title>
+<title>緊急地震速報ビューアーv3.9.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -208,8 +208,11 @@ function sortByAreaOrder(a, b) {
   const ib = areaOrderIndex.has(b) ? areaOrderIndex.get(b) : Infinity;
   return ia - ib;
 }
-
+  
+let running = false;
 async function updateEEW() {
+  if (running) return;
+  running = true;
   try {
     const res = await fetch("https://api.wolfx.jp/jma_eew.json");
     //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
@@ -511,6 +514,7 @@ M${magnitude}
   } catch(e) {
     outputEl.textContent = "取得エラー: " + e.message + (e.stack ? "\n" + e.stack : "");
   }
+  running = false;
 }
 
 updateEEW();
