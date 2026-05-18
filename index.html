@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.9.1</title>
+<title>緊急地震速報ビューアーv3.9.3</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -513,8 +513,9 @@ M${magnitude}
     
   } catch(e) {
     outputEl.textContent = "取得エラー: " + e.message + (e.stack ? "\n" + e.stack : "");
+  } finally {
+    running = false;
   }
-  running = false;
 }
 
 updateEEW();
@@ -532,6 +533,15 @@ copyBtn.addEventListener("click", () => {
   }).catch(err => {
     alert("コピーに失敗しました: " + err);
   });
+});
+
+document.addEventListener("keydown", (e) => {
+  if (e.target.closest("textarea, input, select")) return;
+
+  if (e.key === "Enter") {
+    e.preventDefault();
+    copyBtn.click(); // ←これだけでOK
+  }
 });
 </script>
 </body>
