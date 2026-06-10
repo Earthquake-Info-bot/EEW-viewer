@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.9.3</title>
+<title>緊急地震速報ビューアーv3.9.4</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -21,7 +21,7 @@ body {
   word-break: break-all;
   overflow-wrap: anywhere;
 }
-#status { 
+#status {
   font-size: 12px; 
   margin-bottom: 0px; 
   white-space: pre-wrap;
@@ -222,16 +222,7 @@ async function updateEEW() {
     let eewMessage = "";
 
     if (data.isTraining) {
-      outputEl.textContent = "訓練報のため処理終了";
-      const now = new Date();
-      const y = now.getFullYear();
-      const m = String(now.getMonth()+1).padStart(2,'0');
-      const d = String(now.getDate()).padStart(2,'0');
-      const h = String(now.getHours()).padStart(2,'0');
-      const min = String(now.getMinutes()).padStart(2,'0');
-      const s = String(now.getSeconds()).padStart(2,'0');
-      statusEl.textContent = `最終更新: ${y}/${m}/${d} ${h}:${min}:${s}`;
-      return;
+      eewMessage += "◆◆◆これは緊急地震速報の訓練報です。誤解される可能性のある再配信はご遠慮ください◆◆◆\n";
     }
 
     let maxInt = data.MaxIntensity;
