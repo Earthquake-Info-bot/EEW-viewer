@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.9.4</title>
+<title>t緊急地震速報ビューアーv3.10.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -61,7 +61,8 @@ const regionMap = {
   "伊豆諸島": ["伊豆大島", "新島", "神津島", "三宅島", "八丈島"],
   "小笠原": ["小笠原"],
   "神奈川": ["神奈川"],
-  "新潟": ["新潟", "佐渡"],
+  "新潟": ["新潟"],
+  "佐渡": ["佐渡"],
   "富山": ["富山"],
   "石川": ["石川"],
   "福井": ["福井"],
@@ -214,8 +215,8 @@ async function updateEEW() {
   if (running) return;
   running = true;
   try {
-    const res = await fetch("https://api.wolfx.jp/jma_eew.json");
-    //const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
+    //const res = await fetch("https://api.wolfx.jp/jma_eew.json");
+    const res = await fetch("https://script.google.com/macros/s/AKfycbzgP8R7vowRFrefHbUIkAcGt4NFjJZcuVnnpVqIjpprlCA44PtTk7ffHs-f4HP8Yk8A/exec");
     if (!res.ok) throw new Error("HTTP " + res.status);
     const data = await res.json();
 
@@ -251,7 +252,9 @@ async function updateEEW() {
         // ▼ 一次区分 → 都道府県に変換
         const prefSet = new Set();
 
-        for (const { Chiiki } of data.WarnArea) {
+        for (const { Chiiki, Type } of data.WarnArea) {
+          if (!Type.includes("警報")) continue;
+        
           for (const [pref, areas] of Object.entries(regionMap)) {
             if (areas.some(a => Chiiki.includes(a))) {
               prefSet.add(pref);
@@ -424,7 +427,9 @@ M${magnitude}
         // ▼ 対象地域（地方）抽出
         const regionSet = new Set();
       
-        for (const { Chiiki } of data.WarnArea) {
+        for (const { Chiiki, Type } of data.WarnArea) {
+          if (!Type.includes("警報")) continue;
+        
           for (const [region, areas] of Object.entries(regionMap)) {
             if (areas.some(area => Chiiki.includes(area))) {
               regionSet.add(region);
