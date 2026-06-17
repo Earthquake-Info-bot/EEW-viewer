@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.10.1</title>
+<title>緊急地震速報ビューアーv3.10.2</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -454,8 +454,10 @@ M${magnitude}
         const sortedRegions = regionOrder2.filter(r => regionSet.has(r));
       
         // ▼ 出力
-        eewMessage += `\n【対象地域(広域)】\n${sortedRegions.join("、")}`;
-        eewMessage += `\n\n【地域ごとの推定震度】\n${esi}`;
+        if (sortedRegions.length){
+          eewMessage += `\n【対象地域(広域)】\n${sortedRegions.join("、")}\n`;
+        }
+        eewMessage += `\n【地域ごとの推定震度】\n${esi}`;
       }
 
       if (data.isSea && data.Depth <= 60) {
