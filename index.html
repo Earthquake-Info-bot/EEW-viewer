@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.10.2</title>
+<title>緊急地震速報ビューアーv3.11.1</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -325,7 +325,7 @@ async function updateEEW() {
     document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
     let plum = "";
     if (data.isAssumption) {
-        if (!data.isWarn&&maxInt==="5弱") plum = "  /  レベル法";
+        if (data.OriginalText.split(" ")[0] === "35") plum = "  /  レベル法";
         else plum = "  /  PLUM法";
     }
     eewMessage += `\n${serialText}${plum}\n`;
