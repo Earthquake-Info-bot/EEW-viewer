@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.11.1</title>
+<title>緊急地震速報ビューアーv3.11.2</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -325,19 +325,14 @@ async function updateEEW() {
     document.body.style.background = data.isFinal ? "#ffffff" : "#f3cccb";
     let plum = "";
     if (data.isAssumption) {
-        if (data.OriginalText.split(" ")[0] === "35") plum = "  /  レベル法";
-        else plum = "  /  PLUM法";
+      plum = "  /  PLUM法";
+    } else if (data.OriginalText.split(" ")[0] === "35") {
+      plum = "  /  レベル法";
     }
+
     eewMessage += `\n${serialText}${plum}\n`;
 
     if (data.isCancel) {
-      const hypocenter = data.Hypocenter ?? "震源地不明";
-      const tz = "Asia/Tokyo";
-      const announceDate = data.AnnouncedTime ? new Date(data.AnnouncedTime) : null;
-      const announceStr = announceDate
-        ? `${String(announceDate.getDate()).padStart(2,'0')}日${String(announceDate.getHours()).padStart(2,'0')}:${String(announceDate.getMinutes()).padStart(2,'0')}:${String(announceDate.getSeconds()).padStart(2,'0')}`
-        : "発表時刻不明";
-
       eewMessage += `\n＜キャンセル報＞\nこの緊急地震速報（${announceStr}発表）は取り消されました。`;
 
       outputEl.textContent = eewMessage;
