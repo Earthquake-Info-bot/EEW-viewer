@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.11.2</title>
+<title>緊急地震速報ビューアーv3.11.3</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -350,11 +350,11 @@ async function updateEEW() {
     if (maxInt !== "不明" && maxInt !== "推定なし（深発）") {
         maxInt = `震度${maxInt}`;
     }
-    if (data.isAssumption) {
+    if (data.isAssumption || data.OriginalText.split(" ")[0] === "35") {
       const hypocenter = data.Hypocenter ?? "震源地不明";
       eewMessage += `
 ${hypocenter} で揺れ
-推定最大震度【${maxInt}】
+推定最大震度【${maxInt}以上】
 `;
     } else {
       const hypocenter = data.Hypocenter ?? "震源地不明";
