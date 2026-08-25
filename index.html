@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>緊急地震速報ビューアーv3.11.3</title>
+<title>緊急地震速報ビューアーv3.11.4</title>
 <style>
 body {
   font-family:"Yu Gothic","YuGothic","メイリオ",sans-serif;
@@ -333,7 +333,7 @@ async function updateEEW() {
     eewMessage += `\n${serialText}${plum}\n`;
 
     if (data.isCancel) {
-      eewMessage += `\n＜キャンセル報＞\nこの緊急地震速報（${announceStr}発表）は取り消されました。`;
+      eewMessage += `\n＜キャンセル報＞\nこの緊急地震速報は取り消されました。`;
 
       outputEl.textContent = eewMessage;
       const now = new Date();
@@ -450,7 +450,7 @@ M${magnitude}
       
         // ▼ 出力
         if (sortedRegions.length){
-          eewMessage += `\n【対象地域(広域)】\n${sortedRegions.join("、")}\n`;
+          eewMessage += `\n【推定震度4以上の都道府県】\n${sortedRegions.join("、")}\n`;
         }
         eewMessage += `\n【地域ごとの推定震度】\n${esi}`;
       }
